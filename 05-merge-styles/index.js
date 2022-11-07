@@ -24,24 +24,32 @@ fs.readdir(path.join(finalPath), (err, data) => {
       if (stats.isFile()) {
         
         arr.push(filtArr[i]);
+        
 
       } 
 
-      if (i === filtArr.length - 1) {
+     if (i === filtArr.length - 1) {
+        console.log(arr)
+        console.log(filtArr)
       for (let j = 0; j < arr.length; j++) {
-        fs.readFile(path.join(finalPath, arr[j]), (err, data) => {  
+        const readableStream = fs.createReadStream(path.join(finalPath, arr.sort()[j]), 'utf8');
+        fs.readFile(path.join(finalPath, arr.sort()[j]), (err, data) => {  
+          console.log(path.join(finalPath, arr.sort()[j]))
+          console.log(data)
           if (err) {
             console.log(err);
-            return;
+            return
           }
-          const readableStream = fs.createReadStream(path.join(finalPath, arr[j]), 'utf8');
+          console.log(arr.sort())
+          
           readableStream.on('data', chunk => data = data + chunk)
           readableStream.on('data', chunk => writableToFile.write(chunk));
-            
+          readableStream.on('end', () => console.log('End')) 
         })
         
 
       }
+       
     }
 
   })
